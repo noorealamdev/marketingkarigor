@@ -15,9 +15,28 @@ use Illuminate\Validation\Rules\Password;
 
 class InvitationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $invitations = Invitation::with('inviter')->latest()->paginate(20);
+        $query = Invitation::with('inviter')->latest();
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->search}%")
+                  ->orWhere('name', 'like', "%{$request->search}%");
+            });
+        }
+
+        if ($request->status === 'pending') {
+            $query->whereNull('accepted_at')->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            });
+        } elseif ($request->status === 'accepted') {
+            $query->whereNotNull('accepted_at');
+        } elseif ($request->status === 'expired') {
+            $query->whereNull('accepted_at')->whereNotNull('expires_at')->where('expires_at', '<', now());
+        }
+
+        $invitations = $query->paginate(20)->withQueryString();
         return view('invitations.index', compact('invitations'));
     }
 
@@ -121,10 +140,9 @@ class InvitationController extends Controller
 
     public function destroy(Invitation $invitation)
     {
-        if ($invitation->isAccepted()) {
-            return back()->with('error', 'Cannot delete an accepted invitation.');
-        }
+        $wasAccepted = $invitation->isAccepted();
         $invitation->delete();
-        return redirect()->route('invitations.index')->with('success', 'Invitation revoked.');
+        return redirect()->route('invitations.index')
+            ->with('success', $wasAccepted ? 'Invitation record deleted.' : 'Invitation revoked.');
     }
 }

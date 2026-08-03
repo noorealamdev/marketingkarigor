@@ -67,10 +67,6 @@
                     <input type="text" class="form-control" placeholder="Search team members…" oninput="filterAssigneeRows(this)" style="flex:1;">
                     <span class="text-faint text-xs" id="assigneeCount" style="white-space:nowrap;"></span>
                 </div>
-                <div class="row" style="gap:8px;margin-bottom:8px;">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllAssignees(true)">Select All</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllAssignees(false)">Clear</button>
-                </div>
                 <div id="assigneeList" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;">
                     @foreach($members as $member)
                     <label class="assignee-row" data-name="{{ strtolower($member->name) }}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;border:1px solid #252936;background:#1a1e28;">
@@ -126,14 +122,6 @@ function filterAssigneeRows(input) {
     });
     const noResults = document.getElementById('assigneeNoResults');
     if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
-}
-function toggleAllAssignees(checked) {
-    document.querySelectorAll('#assigneeList .assignee-row').forEach(row => {
-        if (row.style.display !== 'none') {
-            row.querySelector('.assignee-checkbox').checked = checked;
-        }
-    });
-    updateAssigneeCount();
 }
 function updateAssigneeCount() {
     const count = document.querySelectorAll('#assigneeList .assignee-checkbox:checked').length;

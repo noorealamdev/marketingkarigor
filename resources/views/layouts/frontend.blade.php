@@ -6,11 +6,11 @@
     @php
         $pageTitle = trim($__env->yieldContent('title', 'আপনার ব্যবসার মার্কেটিং পার্টনার'));
         $pageDescription = trim($__env->yieldContent('description', 'পরিকল্পিত কনটেন্ট, নিয়মিত পোস্টিং এবং সাপ্তাহিক রিপোর্ট — মার্কেটিং কারিগর আপনার ব্যবসার Facebook Page-কে প্রফেশনালভাবে গড়ে তোলে।'));
-        $fullTitle = config('app.name') . ' — ' . $pageTitle;
+        $fullTitle = 'মার্কেটিং কারিগর' . ' — ' . $pageTitle;
         $ogImage = asset('og-image.png');
         $canonicalUrl = url()->current();
     @endphp
-    <title>মার্কেটিং কারিগর - আপনার ব্যবসার মার্কেটিং পার্টনার</title>
+    <title>{{ $fullTitle }}</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <meta name="description" content="{{ $pageDescription }}">
     <link rel="canonical" href="{{ $canonicalUrl }}">

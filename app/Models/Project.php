@@ -80,6 +80,7 @@ class Project extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(400)
             ->height(300)
+            ->nonOptimized()
             ->performOnCollections('images', 'renders')
             ->nonQueued();
     }

@@ -14,6 +14,20 @@
     </a>
 </div>
 
+<form method="GET" class="filter-row mb-4">
+    <input type="text" name="search" class="form-control" placeholder="Search by email or name…" value="{{ request('search') }}">
+    <select name="status" class="form-control">
+        <option value="">All Statuses</option>
+        <option value="pending" {{ request('status')=='pending'?'selected':'' }}>Pending</option>
+        <option value="accepted" {{ request('status')=='accepted'?'selected':'' }}>Accepted</option>
+        <option value="expired" {{ request('status')=='expired'?'selected':'' }}>Expired</option>
+    </select>
+    <button type="submit" class="btn btn-secondary btn-sm">Filter</button>
+    @if(request()->hasAny(['search','status']))
+        <a href="{{ route('invitations.index') }}" class="btn btn-secondary btn-sm">Clear</a>
+    @endif
+</form>
+
 @if(session('invite_link'))
 <div style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.3);border-radius:9px;padding:16px;margin-bottom:20px;">
     <div class="fw600" style="color:#a89fff;margin-bottom:6px;">
@@ -64,17 +78,20 @@
                 </td>
                 <td class="text-muted text-xs" data-label="Expires">{{ $inv->expires_at?->format('M d, Y') ?? '—' }}</td>
                 <td class="td-actions">
-                    @if(!$inv->isAccepted())
                     <div class="row" style="gap:4px;">
+                        @if(!$inv->isAccepted())
                         <a href="{{ route('invitations.accept', $inv->token) }}" target="_blank" class="btn btn-secondary btn-xs">Link</a>
                         <form method="POST" action="{{ route('invitations.destroy', $inv) }}" onsubmit="return confirm('Revoke this invitation?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-xs">Revoke</button>
                         </form>
+                        @else
+                        <form method="POST" action="{{ route('invitations.destroy', $inv) }}" onsubmit="return confirm('Delete this invitation record? This only removes the invite log — their account and access are not affected.')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                        </form>
+                        @endif
                     </div>
-                    @else
-                        <span class="text-xs text-faint">—</span>
-                    @endif
                 </td>
             </tr>
             @empty
@@ -88,4 +105,5 @@
         </tbody>
     </table>
 </div>
+<div class="pager">{{ $invitations->links() }}</div>
 @endsection

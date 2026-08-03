@@ -76,6 +76,7 @@ class Task extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(320)
             ->height(240)
+            ->nonOptimized()
             ->performOnCollections('attachments')
             ->nonQueued();
     }
