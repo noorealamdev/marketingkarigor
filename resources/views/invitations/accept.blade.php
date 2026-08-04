@@ -12,7 +12,7 @@
         .box { background:#13161d; border:1px solid #252936; border-radius:14px; padding:32px; width:100%; max-width:440px; }
         .logo { font-size:1.4rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:6px; }
         .logo span { color:#6c63ff; }
-        .logo img { max-height:44px; max-width:220px; object-fit:contain; }
+        .logo img { max-width:220px; object-fit:contain; }
         .subtitle { font-size:0.845rem; color:#6b7590; margin-bottom:28px; }
         .invite-info { background:#1a1e28; border:1px solid #252936; border-radius:8px; padding:14px 16px; margin-bottom:24px; }
         .invite-info .invite-email { font-weight:700; color:#c8cce0; }
@@ -27,6 +27,14 @@
         .btn:hover { background:#7b73ff; }
         .pwd-req { font-size:0.71rem; color:#4a5068; transition:color 0.18s; line-height:1.7; }
         .pwd-req.met { color:#4ade80; }
+        .password-wrap { position:relative; }
+        .password-wrap input { padding-right:42px; }
+        .password-toggle {
+            position:absolute; top:50%; right:6px; transform:translateY(-50%);
+            background:none; border:none; padding:6px; cursor:pointer; color:#6b7590;
+            display:flex; align-items:center; justify-content:center; border-radius:6px;
+        }
+        .password-toggle:hover { color:#c8cce0; background:#252936; }
     </style>
 </head>
 <body>
@@ -64,7 +72,13 @@
         </div>
         <div class="form-group">
             <label class="form-label">Password *</label>
-            <input type="password" name="password" id="inv-password" class="form-control" placeholder="Create a strong password" required oninput="checkStrength(this.value)">
+            <div class="password-wrap">
+                <input type="password" name="password" id="inv-password" class="form-control" placeholder="Create a strong password" required oninput="checkStrength(this.value)">
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility(this)" tabindex="-1" aria-label="Show password">
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.5 18.5 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
 
         {{-- Live strength meter --}}
@@ -83,7 +97,13 @@
 
         <div class="form-group">
             <label class="form-label">Confirm Password *</label>
-            <input type="password" name="password_confirmation" class="form-control" placeholder="Repeat password" required>
+            <div class="password-wrap">
+                <input type="password" name="password_confirmation" class="form-control" placeholder="Repeat password" required>
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility(this)" tabindex="-1" aria-label="Show password">
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.5 18.5 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
         <button type="submit" class="btn">Join {{ config('app.name') }}</button>
     </form>
@@ -115,6 +135,15 @@ function checkStrength(val) {
     const colors = ['', '#f87171', '#fb923c', '#fbbf24', '#a3e635', '#4ade80'];
     bar.style.width      = (met / 5 * 100) + '%';
     bar.style.background = colors[met] || '';
+}
+
+function togglePasswordVisibility(btn) {
+    const input = btn.previousElementSibling;
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.querySelector('.eye-open').style.display = showing ? 'block' : 'none';
+    btn.querySelector('.eye-closed').style.display = showing ? 'none' : 'block';
+    btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
 }
 </script>
 </body>

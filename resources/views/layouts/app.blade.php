@@ -12,7 +12,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0f14; color: #e8eaf0; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
         a { color: inherit; text-decoration: none; }
-        .sidebar { background: #13161d; border-right: 1px solid #252936; width: 230px; height: 100vh; position: fixed; top: 0; left: 0; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
+        .sidebar { background: #13161d; border-right: 1px solid #252936; width: 230px; height: 100vh; height: 100dvh; position: fixed; top: 0; left: 0; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
         .sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid #252936; }
         .sidebar-logo h1 { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.25; }
         .sidebar-logo h1 span { color: #6c63ff; }

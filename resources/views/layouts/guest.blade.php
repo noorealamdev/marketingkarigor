@@ -141,6 +141,14 @@
         .remember-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
         .remember-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: #6c63ff; cursor: pointer; }
         .remember-row label { margin: 0; font-size: 0.845rem; text-transform: none; letter-spacing: 0; color: #6b7590; cursor: pointer; }
+        .password-wrap { position: relative; }
+        .password-wrap input[type="password"], .password-wrap input[type="text"] { padding-right: 42px; }
+        .password-toggle {
+            position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+            background: none; border: none; padding: 6px; cursor: pointer; color: #6b7590;
+            display: flex; align-items: center; justify-content: center; border-radius: 6px;
+        }
+        .password-toggle:hover { color: #c8cce0; background: #1a1e28; }
     </style>
 </head>
 <body>
@@ -158,5 +166,15 @@
         {{ $slot }}
     </div>
 </div>
+<script>
+function togglePasswordVisibility(btn) {
+    const input = btn.previousElementSibling;
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.querySelector('.eye-open').style.display = showing ? 'block' : 'none';
+    btn.querySelector('.eye-closed').style.display = showing ? 'none' : 'block';
+    btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+}
+</script>
 </body>
 </html>
