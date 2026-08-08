@@ -74,8 +74,6 @@
         :root {
             --accent: #f2b705;
             --accent-light: #f8d878;
-            --whatsapp: #25d366;
-            --whatsapp-dark: #1fb855;
             --bg: #0a0c12;
             --bg-alt: #10131c;
             --card: #13161f;
@@ -91,7 +89,7 @@
             color: var(--text);
             line-height: 1.7;
             overflow-x: hidden;
-            padding-bottom: 74px; /* room for sticky mobile WhatsApp bar */
+            padding-bottom: 74px; /* room for sticky mobile contact bar */
         }
         .en { font-family: 'Inter', sans-serif; }
         .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
@@ -122,13 +120,13 @@
         .btn-primary:hover { background: #5a52e0; transform: translateY(-1px); }
         .btn-outline { border-color: var(--border); color: var(--text); }
         .btn-outline:hover { border-color: var(--accent); color: var(--accent-light); }
-        .btn-whatsapp { background: var(--whatsapp); color: #06210f; }
-        .btn-whatsapp:hover { background: var(--whatsapp-dark); transform: translateY(-1px); }
+        .btn-whatsapp { background: var(--accent); color: #1a1024; }
+        .btn-whatsapp:hover { background: #ffc933; transform: translateY(-1px); }
         .btn-sm { padding: 8px 14px; font-size: 0.8rem; }
         .btn-lg { padding: 15px 26px; font-size: 1rem; width: 100%; }
         .btn svg { flex-shrink: 0; }
 
-        /* ── Sticky mobile WhatsApp bar ── */
+        /* ── Sticky mobile contact bar ── */
         .mobile-cta-bar {
             position: fixed; left: 0; right: 0; bottom: 0; z-index: 200;
             background: var(--bg-alt); border-top: 1px solid var(--border);
@@ -147,7 +145,7 @@
         /* ── Footer ── */
         footer { border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
         footer .footer-contact { margin-bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        footer .footer-contact a.whatsapp-line { display: inline-flex; align-items: center; gap: 8px; color: #4ade80; text-decoration: none; font-weight: 600; font-size: 0.92rem; }
+        footer .footer-contact a.whatsapp-line { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-light); text-decoration: none; font-weight: 600; font-size: 0.92rem; }
         .social-links { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 14px; }
         .social-links a {
             display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
@@ -198,8 +196,8 @@
                 <a href="{{ route('login') }}" class="nav-login">লগইন</a>
                 @if($wa = whatsapp_link('আসসালামু আলাইকুম, আমার ব্যবসার জন্য Facebook Marketing সম্পর্কে জানতে চাই।'))
                 <a href="{{ $wa }}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.29-1.39a9.9 9.9 0 004.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.83 2.01.9 2.16.07.15.11.32.02.51-.09.19-.14.31-.27.48-.14.17-.29.37-.41.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.63-.14.26.09 1.68.79 1.97.93.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg>
-                    WhatsApp
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+                    যোগাযোগ
                 </a>
                 @endif
             </div>
@@ -218,7 +216,7 @@
         <div class="footer-contact">
             @if($wa)
             <a href="{{ $wa }}" target="_blank" rel="noopener" class="whatsapp-line">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.29-1.39a9.9 9.9 0 004.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.83 2.01.9 2.16.07.15.11.32.02.51-.09.19-.14.31-.27.48-.14.17-.29.37-.41.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.63-.14.26.09 1.68.79 1.97.93.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
                 {{ whatsapp_display() }}
             </a>
             @endif
@@ -243,8 +241,8 @@
     @if($wa)
     <div class="mobile-cta-bar">
         <a href="{{ $wa }}" target="_blank" rel="noopener" class="btn btn-whatsapp">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.29-1.39a9.9 9.9 0 004.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.83 2.01.9 2.16.07.15.11.32.02.51-.09.19-.14.31-.27.48-.14.17-.29.37-.41.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.63-.14.26.09 1.68.79 1.97.93.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg>
-            WhatsApp-এ কথা বলুন
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            যোগাযোগ করুন
         </a>
     </div>
     @endif

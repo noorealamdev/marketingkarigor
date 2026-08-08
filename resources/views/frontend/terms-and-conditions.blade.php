@@ -90,7 +90,7 @@
             <div class="contact-box">
                 <p style="margin-bottom:6px;">শর্তাবলী সংক্রান্ত যেকোনো প্রশ্নের জন্য যোগাযোগ করুন —</p>
                 @if($wa = whatsapp_link('আমি শর্তাবলী সম্পর্কে জানতে চাই।'))
-                <p style="margin-bottom:0;"><a href="{{ $wa }}" target="_blank" rel="noopener">WhatsApp: {{ whatsapp_display() }}</a></p>
+                <p style="margin-bottom:0;"><a href="{{ $wa }}" target="_blank" rel="noopener">যোগাযোগ: {{ whatsapp_display() }}</a></p>
                 @endif
             </div>
 
