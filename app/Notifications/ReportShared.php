@@ -27,14 +27,20 @@ class ReportShared extends Notification implements ShouldQueue
     {
         $period = $this->report->periodEnum()->label();
         $range  = $this->report->period_start->format('M d') . ' – ' . $this->report->period_end->format('M d, Y');
+        $label  = $this->report->title ?: ($this->report->report_type ? "{$this->report->report_type} report" : "{$period} report");
 
-        return (new MailMessage)
-            ->subject("Your {$period} Performance Report ({$range})")
+        $mail = (new MailMessage)
+            ->subject("Your report is ready — {$range}")
             ->greeting("Hi {$notifiable->name},")
-            ->line("Your {$period} performance report for {$range} is ready to view.")
-            ->when($this->report->reach, fn ($m) => $m->line("**Reach:** " . number_format($this->report->reach)))
-            ->when($this->report->engagement, fn ($m) => $m->line("**Engagement:** " . number_format($this->report->engagement)))
-            ->when($this->report->video_views, fn ($m) => $m->line("**Video Views:** " . number_format($this->report->video_views)))
+            ->line("Your {$label} for {$range} is ready to view.");
+
+        foreach (array_slice($this->report->metrics ?? [], 0, 5) as $metric) {
+            if (($metric['value'] ?? '') !== '') {
+                $mail->line("**{$metric['label']}:** {$metric['value']}");
+            }
+        }
+
+        return $mail
             ->action('View Report', url("/portal/reports/{$this->report->id}"))
             ->line('Thank you for using ' . config('app.name') . '!');
     }

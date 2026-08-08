@@ -103,6 +103,24 @@
         .pager a, .pager span { padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; color: #6b7590; background: #1a1e28; border: 1px solid #252936; }
         .pager .pager-active { background: rgba(242,183,5,0.15); color: #f2b705; border-color: rgba(242,183,5,0.3); }
 
+        /* Notification bell */
+        .notif-wrap { position: relative; }
+        .notif-bell { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9px; color: #6b7590; cursor: pointer; background: transparent; border: none; transition: all 0.12s; }
+        .notif-bell:hover { background: #1a1e28; color: #c8cce0; }
+        .notif-badge { position: absolute; top: 3px; right: 3px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 8px; background: #f2b705; color: #1a1024; font-size: 0.6rem; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid #13161d; }
+        .notif-dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 340px; max-width: calc(100vw - 28px); background: #13161d; border: 1px solid #252936; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); z-index: 100; overflow: hidden; display: none; }
+        .notif-dropdown.open { display: block; }
+        .notif-dropdown-hd { padding: 12px 16px; border-bottom: 1px solid #252936; display: flex; align-items: center; justify-content: space-between; }
+        .notif-dropdown-hd span { font-size: 0.845rem; font-weight: 700; color: #c8cce0; }
+        .notif-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #1a1e28; transition: background 0.1s; text-decoration: none; }
+        .notif-item:hover { background: #1a1e28; }
+        .notif-item-avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(242,183,5,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: #f2b705; flex-shrink: 0; }
+        .notif-item-title { font-size: 0.8rem; color: #c8cce0; line-height: 1.4; }
+        .notif-item-time { font-size: 0.7rem; color: #4a5068; margin-top: 2px; }
+        .notif-item.read .notif-item-title { color: #6b7590; }
+        .notif-dropdown-ft { padding: 10px 14px; text-align: center; }
+        .notif-dropdown-ft a { font-size: 0.78rem; color: #f2b705; text-decoration: none; }
+
         @media (max-width: 768px) {
             .g4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .g2 { grid-template-columns: 1fr; gap: 12px; }
@@ -140,6 +158,41 @@
         </nav>
     </div>
     <div class="portal-user">
+        @php $unreadCount = Auth::user()->unreadNotifications->count(); @endphp
+        <div class="notif-wrap" id="notifWrap">
+            <button class="notif-bell" onclick="toggleNotifDropdown()" title="Notifications" aria-label="Notifications">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                @if($unreadCount > 0)<span class="notif-badge">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>@endif
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-hd">
+                    <span>Notifications @if($unreadCount > 0)<span style="color:#f2b705;font-size:0.75rem;">({{ $unreadCount }} new)</span>@endif</span>
+                    @if($unreadCount > 0)
+                    <form method="POST" action="{{ route('notifications.mark-all-read') }}">
+                        @csrf
+                        <button type="submit" style="background:none;border:none;color:#f2b705;font-size:0.75rem;cursor:pointer;padding:0;">Mark all read</button>
+                    </form>
+                    @endif
+                </div>
+                @php $recent = Auth::user()->notifications()->latest()->take(6)->get(); @endphp
+                @forelse($recent as $n)
+                    @php $d = $n->data; @endphp
+                    <a href="{{ route('notifications.read', $n->id) }}" class="notif-item {{ $n->read_at ? 'read' : '' }}">
+                        <div class="notif-item-avatar">{{ $d['actor_initial'] ?? '•' }}</div>
+                        <div style="flex:1;min-width:0;">
+                            <div class="notif-item-title">{{ \Illuminate\Support\Str::limit($d['title'] ?? 'Notification', 60) }}</div>
+                            <div class="notif-item-time">{{ $n->created_at->diffForHumans() }}</div>
+                        </div>
+                        @if(!$n->read_at)<div style="width:6px;height:6px;border-radius:50%;background:#f2b705;flex-shrink:0;margin-top:6px;"></div>@endif
+                    </a>
+                @empty
+                    <div style="padding:24px;text-align:center;color:#4a5068;font-size:0.82rem;">No notifications yet</div>
+                @endforelse
+                <div class="notif-dropdown-ft">
+                    <a href="{{ route('client.notifications') }}">View all notifications →</a>
+                </div>
+            </div>
+        </div>
         @if($portalClient = Auth::user()->client)
         <span class="client-id-badge" title="Your Client ID — quote this when contacting support">ID: {{ $portalClient->id }}</span>
         @endif
@@ -159,6 +212,17 @@
     @endif
     @yield('content')
 </div>
+<script>
+function toggleNotifDropdown() {
+    document.getElementById('notifDropdown').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('notifWrap');
+    if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('notifDropdown').classList.remove('open');
+    }
+});
+</script>
 @stack('scripts')
 </body>
 </html>

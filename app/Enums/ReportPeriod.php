@@ -6,14 +6,14 @@ use Carbon\Carbon;
 
 enum ReportPeriod: string
 {
-    case Daily = 'daily';
+    case OneTime = 'one-time';
     case Weekly = 'weekly';
     case Monthly = 'monthly';
 
     public function label(): string
     {
         return match ($this) {
-            self::Daily => 'Daily',
+            self::OneTime => 'One-time',
             self::Weekly => 'Weekly',
             self::Monthly => 'Monthly',
         };
@@ -22,7 +22,7 @@ enum ReportPeriod: string
     public function endOfPeriod(Carbon $start): Carbon
     {
         return match ($this) {
-            self::Daily => $start->copy()->endOfDay(),
+            self::OneTime => $start->copy()->endOfDay(),
             self::Weekly => $start->copy()->addDays(6)->endOfDay(),
             self::Monthly => $start->copy()->endOfMonth(),
         };

@@ -5,8 +5,11 @@
 @section('content')
 <div class="page-hd row between">
     <div>
-        <h2>{{ $report->client->company ?: $report->client->name }}</h2>
-        <div class="row center" style="gap:8px;margin-top:4px;">
+        <h2>{{ $report->title ?: ($report->client->company ?: $report->client->name) }}</h2>
+        <div class="row center" style="gap:8px;margin-top:4px;flex-wrap:wrap;">
+            @if($report->report_type)
+            <span class="badge" style="background:rgba(96,165,250,0.12);color:#60a5fa;">{{ $report->report_type }}</span>
+            @endif
             <span class="badge" style="background:rgba(108,99,255,0.12);color:#a89fff;">{{ $report->periodEnum()->label() }}</span>
             <span class="text-sm text-muted">{{ $report->period_start->format('M d') }} – {{ $report->period_end->format('M d, Y') }}</span>
             @if($report->isSent())
@@ -36,25 +39,18 @@
     </div>
 </div>
 
-<div class="g4 mb6">
+@if(!empty($report->metrics))
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;">
+    @foreach($report->metrics as $m)
     <div class="stat-card">
-        <div class="stat-label">Reach</div>
-        <div class="stat-value">{{ $report->reach !== null ? number_format($report->reach) : '—' }}</div>
+        <div class="stat-label">{{ $m['label'] }}</div>
+        <div class="stat-value" style="font-size:1.5rem;">{{ ($m['value'] ?? '') !== '' ? $m['value'] : '—' }}</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-label">Engagement</div>
-        <div class="stat-value">{{ $report->engagement !== null ? number_format($report->engagement) : '—' }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Video Views</div>
-        <div class="stat-value">{{ $report->video_views !== null ? number_format($report->video_views) : '—' }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-label">Tasks Completed</div>
-        <div class="stat-value">{{ $report->tasksCompletedCount() }}</div>
-        <div class="stat-sub">Auto-tracked from this period</div>
-    </div>
+    @endforeach
 </div>
+@else
+<div class="card mb6"><div class="card-bd"><p class="text-muted text-sm">No metrics recorded for this report.</p></div></div>
+@endif
 
 <div class="g2">
     <div class="card">
@@ -69,12 +65,12 @@
                         <a href="{{ route('projects.show', $report->project) }}" class="link">{{ $report->project->name }}</a>
                     @else — @endif
                 </span>
+                <span class="detail-label">Service</span>
+                <span class="detail-value">{{ $report->report_type ?: '—' }}</span>
                 <span class="detail-label">Period</span>
                 <span class="detail-value">{{ $report->periodEnum()->label() }}</span>
                 <span class="detail-label">Range</span>
                 <span class="detail-value">{{ $report->period_start->format('M d, Y') }} – {{ $report->period_end->format('M d, Y') }}</span>
-                <span class="detail-label">Best Post</span>
-                <span class="detail-value">{{ $report->best_performing_post ?: '—' }}</span>
                 <span class="detail-label">Created By</span>
                 <span class="detail-value">{{ $report->createdBy?->name ?? '—' }}</span>
             </div>
@@ -82,8 +78,13 @@
     </div>
 
     <div class="card">
-        <div class="card-hd"><h3>Next Period's Plan</h3></div>
+        <div class="card-hd"><h3>Summary &amp; Next Steps</h3></div>
         <div class="card-bd">
+            @if($report->summary)
+                <div class="detail-label" style="margin-bottom:4px;">Summary</div>
+                <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;margin-bottom:14px;">{{ $report->summary }}</p>
+            @endif
+            <div class="detail-label" style="margin-bottom:4px;">Next Steps / Plan</div>
             @if($report->next_plan)
                 <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $report->next_plan }}</p>
             @else

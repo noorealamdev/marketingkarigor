@@ -98,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Client portal
     Route::middleware('client')->group(function () {
         Route::get('/portal', fn () => view('client.dashboard'))->name('client.dashboard');
+        Route::get('/portal/notifications', [NotificationController::class, 'clientIndex'])->name('client.notifications');
         Route::get('/portal/reports', [ReportController::class, 'clientIndex'])->name('client.reports.index');
         Route::get('/portal/reports/{report}', [ReportController::class, 'clientShow'])->name('client.reports.show');
 

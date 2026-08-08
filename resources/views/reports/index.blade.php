@@ -35,8 +35,8 @@
                 <th>Client</th>
                 <th>Period</th>
                 <th>Range</th>
-                <th>Reach</th>
-                <th>Engagement</th>
+                <th>Service</th>
+                <th>Metrics</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -52,8 +52,8 @@
                 </td>
                 <td data-label="Period"><span class="badge" style="background:rgba(108,99,255,0.12);color:#a89fff;">{{ $report->periodEnum()->label() }}</span></td>
                 <td class="text-muted" data-label="Range">{{ $report->period_start->format('M d') }} – {{ $report->period_end->format('M d, Y') }}</td>
-                <td class="text-muted" data-label="Reach">{{ $report->reach !== null ? number_format($report->reach) : '—' }}</td>
-                <td class="text-muted" data-label="Engagement">{{ $report->engagement !== null ? number_format($report->engagement) : '—' }}</td>
+                <td class="text-muted" data-label="Service">{{ $report->report_type ?: '—' }}</td>
+                <td class="text-muted" data-label="Metrics">{{ count($report->metrics ?? []) }}</td>
                 <td data-label="Status">
                     @if($report->isSent())
                         <span class="badge badge-done">Sent</span>

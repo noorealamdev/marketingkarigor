@@ -120,20 +120,48 @@ class ReportController extends Controller
 
     private function validated(Request $request, ?PerformanceReport $report = null): array
     {
-        $data = $request->validate([
-            'client_id'             => 'required|exists:clients,id',
-            'project_id'            => 'nullable|exists:projects,id',
-            'period_type'           => ['required', new Enum(ReportPeriod::class)],
-            'period_start'          => 'required|date',
-            'period_end'            => 'required|date|after_or_equal:period_start',
-            'reach'                 => 'nullable|integer|min:0',
-            'engagement'            => 'nullable|integer|min:0',
-            'video_views'           => 'nullable|integer|min:0',
-            'best_performing_post'  => 'nullable|string|max:255',
-            'next_plan'             => 'nullable|string',
-            'notes'                 => 'nullable|string',
+        $validated = $request->validate([
+            'client_id'      => 'required|exists:clients,id',
+            'project_id'     => 'nullable|exists:projects,id',
+            'report_type'    => 'nullable|string|max:100',
+            'title'          => 'nullable|string|max:255',
+            'period_type'    => ['required', new Enum(ReportPeriod::class)],
+            'period_start'   => 'required|date',
+            'period_end'     => 'required|date|after_or_equal:period_start',
+            'metric_label'   => 'nullable|array',
+            'metric_label.*' => 'nullable|string|max:100',
+            'metric_value'   => 'nullable|array',
+            'metric_value.*' => 'nullable|string|max:100',
+            'summary'        => 'nullable|string',
+            'next_plan'      => 'nullable|string',
+            'notes'          => 'nullable|string',
         ]);
 
-        return $data;
+        // Zip the parallel label/value inputs into a flexible metrics list,
+        // keeping only rows that have a metric name.
+        $labels  = $request->input('metric_label', []);
+        $values  = $request->input('metric_value', []);
+        $metrics = [];
+        foreach ($labels as $i => $label) {
+            $label = trim((string) $label);
+            if ($label === '') {
+                continue;
+            }
+            $metrics[] = ['label' => $label, 'value' => trim((string) ($values[$i] ?? ''))];
+        }
+
+        return [
+            'client_id'    => $validated['client_id'],
+            'project_id'   => $validated['project_id'] ?? null,
+            'report_type'  => $validated['report_type'] ?? null,
+            'title'        => $validated['title'] ?? null,
+            'period_type'  => $validated['period_type'],
+            'period_start' => $validated['period_start'],
+            'period_end'   => $validated['period_end'],
+            'metrics'      => $metrics,
+            'summary'      => $validated['summary'] ?? null,
+            'next_plan'    => $validated['next_plan'] ?? null,
+            'notes'        => $validated['notes'] ?? null,
+        ];
     }
 }

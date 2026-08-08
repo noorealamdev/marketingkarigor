@@ -18,6 +18,18 @@ class NotificationController extends Controller
         return view('notifications.index', compact('notifications'));
     }
 
+    public function clientIndex()
+    {
+        $notifications = auth()->user()
+            ->notifications()
+            ->latest()
+            ->paginate(20);
+
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return view('client.notifications.index', compact('notifications'));
+    }
+
     public function markRead(string $id)
     {
         $notification = auth()->user()->notifications()->findOrFail($id);

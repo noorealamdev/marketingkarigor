@@ -12,20 +12,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->cascadeOnDelete();
             $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('period_type')->default('weekly'); // daily | weekly | monthly
+            $table->string('report_type')->nullable(); // Facebook Marketing | Google Ads | TikTok Ads | Web Development | …
+            $table->string('title')->nullable();
+            $table->string('period_type')->default('monthly'); // one-time | weekly | monthly
             $table->date('period_start');
             $table->date('period_end');
-            $table->unsignedInteger('reach')->nullable();
-            $table->unsignedInteger('engagement')->nullable();
-            $table->unsignedInteger('video_views')->nullable();
-            $table->string('best_performing_post')->nullable();
+            $table->json('metrics')->nullable(); // flexible [{label, value}] list — service-agnostic
+            $table->text('summary')->nullable();
             $table->text('next_plan')->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['client_id', 'period_type', 'period_start']);
             $table->index('sent_at');
             $table->index('period_start');
         });

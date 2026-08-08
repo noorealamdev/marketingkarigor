@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PerformanceReport extends Model
 {
     protected $fillable = [
-        'client_id', 'project_id', 'period_type', 'period_start', 'period_end',
-        'reach', 'engagement', 'video_views', 'best_performing_post',
-        'next_plan', 'notes', 'created_by', 'sent_at',
+        'client_id', 'project_id', 'report_type', 'title', 'period_type', 'period_start', 'period_end',
+        'metrics', 'summary', 'next_plan', 'notes', 'created_by', 'sent_at',
     ];
 
     protected $casts = [
         'period_start' => 'date',
         'period_end'   => 'date',
         'sent_at'      => 'datetime',
+        'metrics'      => 'array',
     ];
 
     public function client(): BelongsTo
