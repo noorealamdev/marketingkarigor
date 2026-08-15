@@ -207,7 +207,7 @@ function previewAndSubmitAvatar(input) {
     };
     reader.readAsDataURL(input.files[0]);
     // Auto-submit after brief delay so preview shows
-    setTimeout(() => document.getElementById('avatarUploadForm').submit(), 150);
+    setTimeout(() => document.getElementById('avatarUploadForm').requestSubmit(), 150);
 }
 
 function updatePasswordStrength(value) {

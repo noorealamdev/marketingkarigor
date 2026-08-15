@@ -185,15 +185,20 @@ if (!function_exists('format_comment')) {
 
         // Escape and format plain text (placeholders survive htmlspecialchars unchanged).
         $safe = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $safe = nl2br($safe);
 
         // Auto-link plain URLs NOW — before any HTML is injected — so the regex
         // cannot accidentally match URLs inside href="…" attributes added below.
+        // (Also must run before nl2br: nl2br's own "<br />" contains a space,
+        // which would otherwise get eaten by \S+ and mangle both the link and the tag.)
+        // Note: no rebase_media_url() here — these are arbitrary URLs a person
+        // typed/pasted (Facebook, client sites, anything), not our own stored
+        // media paths, so the destination must be kept exactly as given.
         $safe = preg_replace_callback('#(https?://\S+)#i', function ($m) {
-            $url   = rebase_media_url(htmlspecialchars_decode($m[1], ENT_QUOTES));
-            $safeU = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+            $safeU = htmlspecialchars(htmlspecialchars_decode($m[1], ENT_QUOTES), ENT_QUOTES, 'UTF-8');
             return '<a href="' . $safeU . '" target="_blank" rel="noopener" class="link">' . $safeU . '</a>';
         }, $safe);
+
+        $safe = nl2br($safe);
 
         // Restore file placeholders as icon + filename link.
         // No URLs appear in the display text, so auto-link (already done) cannot touch them.

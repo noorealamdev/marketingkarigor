@@ -7,8 +7,10 @@
     <title>{{ config('app.name') }} — @yield('title', 'Client Portal')</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link href="{{ asset('build/assets/app.css') }}" rel="stylesheet" />
+    <script src="{{ asset('build/assets/app.js') }}" defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --kg-accent: #f2b705; --kg-accent-glow: rgba(242, 183, 5, .55); }
         body { background: #0d0f14; color: #e8eaf0; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
         a { color: inherit; text-decoration: none; }
         .portal-topbar { background: #13161d; border-bottom: 1px solid #252936; padding: 0 20px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
@@ -68,7 +70,10 @@
         .comment-meta { display:flex;align-items:center;justify-content:space-between;margin-bottom:5px; }
         .comment-author { font-size:0.8rem;font-weight:600;color:#c8cce0; }
         .comment-time { font-size:0.7rem;color:#4a5068; }
-        .comment-body { font-size:0.845rem;color:#a0a6be;line-height:1.55;white-space:pre-line; }
+        .comment-body { font-size:0.845rem;color:#a0a6be;line-height:1.55; } /* no white-space:pre-line — format_comment() already emits real <br>, pre-line would double every break */
+        .comment-body a.link, .desc-field a.desc-link { color:#f2b705;text-decoration:none; }
+        .comment-body a.link:hover, .desc-field a.desc-link:hover { text-decoration:underline; }
+        .desc-field { font-size:0.875rem;color:#c8cce0;line-height:1.6; }
         .comment-attachments { display:flex;flex-direction:column;gap:8px;margin-top:10px; }
         .comment-img { max-width:100%;max-height:320px;border-radius:8px;border:1px solid #252936;display:block;cursor:zoom-in; }
         .comment-video { max-width:100%;max-height:320px;border-radius:8px;border:1px solid #252936;display:block;background:#000; }

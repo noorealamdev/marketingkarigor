@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* -----------------------------------------------------------------------
+ * Global loading-state feedback: top progress bar + submit-button spinner.
+ * Fires on every internal link click / form submit across the app (see
+ * app.js) so there is always visible confirmation a tap registered —
+ * mainly for slower mobile connections where nothing else on screen
+ * changes until the next page finishes loading.
+ * --------------------------------------------------------------------- */
+:root {
+    --kg-accent: #6c63ff;                    /* staff dashboard default */
+    --kg-accent-glow: rgba(108, 99, 255, .55);
+}
+
+#kg-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: var(--kg-accent);
+    box-shadow: 0 0 8px var(--kg-accent-glow);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: width .2s ease-out, opacity .2s ease-out;
+}
+
+.kg-spinner {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin-right: 7px;
+    vertical-align: -2px;
+    border: 2px solid rgba(255, 255, 255, .35);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: kg-spin .7s linear infinite;
+}
+
+@keyframes kg-spin {
+    to { transform: rotate(360deg); }
+}
+
+.kg-btn-loading,
+.kg-btn-disabled {
+    opacity: .72;
+    cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kg-spinner { animation-duration: 1.4s; }
+}

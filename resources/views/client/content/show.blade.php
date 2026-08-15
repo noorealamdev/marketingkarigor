@@ -24,7 +24,7 @@
     <div class="card-hd"><h3>Content</h3></div>
     <div class="card-bd">
         @if($task->description)
-        <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;margin-bottom:14px;">{{ $task->description }}</p>
+        <p class="desc-field" style="margin-bottom:14px;">{!! format_description($task->description) !!}</p>
         @endif
 
         @php $files = $task->getMedia('attachments'); @endphp

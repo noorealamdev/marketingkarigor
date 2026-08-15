@@ -12,6 +12,7 @@ Run from the application root on the server (via SSH or cPanel Terminal):
 ```bash
 git pull origin main
 composer install --no-dev --optimize-autoloader
+npm install && npm run build              # public/build is gitignored — must be built on the server
 php artisan storage:link                 # harmless if the link already exists
 php artisan migrate --force              # see "Database" below for the fresh-rebuild case
 php artisan config:clear
@@ -30,9 +31,18 @@ php artisan config:cache
 ```bash
 git pull origin main
 composer install --no-dev --optimize-autoloader   # only if composer.lock changed
+npm run build                                       # only if anything under resources/ changed
 php artisan migrate --force                        # applies any NEW migrations only
 php artisan config:clear && php artisan view:clear && php artisan config:cache
 ```
+
+> **`public/build/` is gitignored** and never travels with `git pull`. Any change
+> to a Blade layout's `<style>`/`<script>`, `resources/css/app.css`, or
+> `resources/js/app.js` needs `npm run build` re-run on the server, or the live
+> site keeps serving the old bundle. If `npm`/Node isn't available on the
+> shared-hosting shell, build locally (`npm run build`) and commit/upload the
+> resulting `public/build/` folder instead — check it isn't silently excluded
+> by `.gitignore` if you go that route.
 
 That's the normal case. Plain `migrate` applies only migrations the server
 hasn't run yet and **never touches existing data**.

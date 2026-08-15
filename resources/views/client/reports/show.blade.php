@@ -28,7 +28,7 @@
 <div class="card" style="margin-bottom:16px;">
     <div class="card-hd"><h3>Summary</h3></div>
     <div class="card-bd">
-        <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $report->summary }}</p>
+        <p class="desc-field">{!! format_description($report->summary) !!}</p>
     </div>
 </div>
 @endif
@@ -37,7 +37,7 @@
     <div class="card-hd"><h3>Next Steps / Plan</h3></div>
     <div class="card-bd">
         @if($report->next_plan)
-            <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $report->next_plan }}</p>
+            <p class="desc-field">{!! format_description($report->next_plan) !!}</p>
         @else
             <p class="text-muted text-sm">No plan added for the next period yet.</p>
         @endif

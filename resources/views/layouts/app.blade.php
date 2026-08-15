@@ -7,7 +7,7 @@
     <title>{{ config('app.name') }} — @yield('title', 'Dashboard')</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link href="{{ asset('build/assets/app.css') }}" rel="stylesheet" />
-    <script src="{{ asset('build/assets/app.js') }}"></script>
+    <script src="{{ asset('build/assets/app.js') }}" defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #0d0f14; color: #e8eaf0; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
@@ -62,6 +62,7 @@
         .fw700 { font-weight: 700; }
         .link { color: #6c63ff; }
         .link:hover { text-decoration: underline; }
+        .desc-field { font-size: 0.875rem; color: #c8cce0; line-height: 1.6; }
         .desc-field a.desc-link { color: #6c63ff; text-decoration: none; }
         .desc-field a.desc-link:hover { text-decoration: underline; }
         .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#6c63ff,#a78bfa); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #fff; }
@@ -311,7 +312,7 @@
         @else
             <h1>{{ config('app.name') }}</h1>
         @endif
-        <small>Management Suite</small>
+        <small>HQ</small>
     </div>
     <nav style="flex:1;overflow-y:auto;padding-top:6px;">
         @php $user = Auth::user(); @endphp

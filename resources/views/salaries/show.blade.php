@@ -48,8 +48,8 @@
             </div>
         </div>
         @if($current->notes)
-        <div style="margin-top:14px;padding:10px 12px;background:#13161d;border-radius:6px;font-size:0.8rem;color:#6b7590;">
-            {{ $current->notes }}
+        <div class="desc-field" style="margin-top:14px;padding:10px 12px;background:#13161d;border-radius:6px;font-size:0.8rem;color:#6b7590;">
+            {!! format_description($current->notes) !!}
         </div>
         @endif
         @else

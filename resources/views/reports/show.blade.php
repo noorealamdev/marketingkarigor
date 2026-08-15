@@ -82,11 +82,11 @@
         <div class="card-bd">
             @if($report->summary)
                 <div class="detail-label" style="margin-bottom:4px;">Summary</div>
-                <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;margin-bottom:14px;">{{ $report->summary }}</p>
+                <p class="desc-field" style="margin-bottom:14px;">{!! format_description($report->summary) !!}</p>
             @endif
             <div class="detail-label" style="margin-bottom:4px;">Next Steps / Plan</div>
             @if($report->next_plan)
-                <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $report->next_plan }}</p>
+                <p class="desc-field">{!! format_description($report->next_plan) !!}</p>
             @else
                 <p class="text-muted text-sm">No plan added yet.</p>
             @endif
@@ -98,7 +98,7 @@
 <div class="card" style="margin-top:14px;">
     <div class="card-hd"><h3>Internal Notes <span class="text-faint text-xs" style="font-weight:400;">(not shown to client)</span></h3></div>
     <div class="card-bd">
-        <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $report->notes }}</p>
+        <p class="desc-field">{!! format_description($report->notes) !!}</p>
     </div>
 </div>
 @endif

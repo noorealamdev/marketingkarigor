@@ -31,6 +31,7 @@
     .section { margin-bottom: 22px; }
     .section h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #92720c; margin-bottom: 8px; }
     .section p { font-size: 13px; color: #374151; line-height: 1.7; }
+    .section p a.desc-link { color: #b8860b; }
     .notes-box { background: #fdf6e3; border-left: 4px solid #b8860b; padding: 14px 18px; border-radius: 0 6px 6px 0; }
 
     .footer { border-top: 1px solid #e5e7eb; padding-top: 18px; display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; }
@@ -101,7 +102,7 @@
     @if($report->summary)
     <div class="section">
         <h4>Summary</h4>
-        <p>{{ $report->summary }}</p>
+        <p>{!! format_description($report->summary) !!}</p>
     </div>
     @endif
 
@@ -109,7 +110,7 @@
     <div class="section">
         <h4>Next Steps / Plan</h4>
         <div class="notes-box">
-            <p>{{ $report->next_plan }}</p>
+            <p>{!! format_description($report->next_plan) !!}</p>
         </div>
     </div>
     @endif

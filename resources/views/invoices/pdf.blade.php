@@ -77,6 +77,7 @@
     .notes-box { background: #fdf6e3; border-left: 4px solid #b8860b; padding: 14px 18px; border-radius: 0 6px 6px 0; margin-top: 22px; position: relative; z-index: 1; }
     .notes-box h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #92720c; margin-bottom: 6px; }
     .notes-box p { font-size: 12px; color: #374151; line-height: 1.6; }
+    .notes-box p a.desc-link { color: #b8860b; }
 
     /* Footer */
     .footer { border-top: 1px solid #e5e7eb; padding-top: 16px; margin-top: 36px; position: relative; z-index: 1; }
@@ -216,7 +217,7 @@
     @if($invoice->notes)
     <div class="notes-box">
         <h4>Notes</h4>
-        <p>{{ $invoice->notes }}</p>
+        <p>{!! format_description($invoice->notes) !!}</p>
     </div>
     @endif
 

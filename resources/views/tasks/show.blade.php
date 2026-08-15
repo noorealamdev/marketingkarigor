@@ -14,7 +14,7 @@
 .comment-meta { display:flex;align-items:center;justify-content:space-between;margin-bottom:5px; }
 .comment-author { font-size:0.8rem;font-weight:600;color:#c8cce0; }
 .comment-time { font-size:0.7rem;color:#4a5068; }
-.comment-body { font-size:0.845rem;color:#a0a6be;line-height:1.55;white-space:pre-line; }
+.comment-body { font-size:0.845rem;color:#a0a6be;line-height:1.55; } /* no white-space:pre-line — format_comment() already emits real <br>, pre-line would double every break */
 .comment-form { margin-top:14px; }
 .comment-textarea { width:100%;background:#1a1e28;border:1px solid #252936;border-radius:8px;padding:10px 12px;color:#c8cce0;font-size:0.845rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.12s; }
 .comment-textarea:focus { outline:none;border-color:#6c63ff; }

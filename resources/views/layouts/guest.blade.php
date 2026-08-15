@@ -8,8 +8,16 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
+    <script src="{{ asset('build/assets/app.js') }}" defer></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        /* Loading-state feedback (progress bar + button spinner) driven by
+           app.js — kept local here rather than pulling in app.css, since
+           this layout intentionally doesn't use Tailwind. */
+        #kg-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: #6c63ff; box-shadow: 0 0 8px rgba(108,99,255,.55); z-index: 9999; opacity: 0; pointer-events: none; transition: width .2s ease-out, opacity .2s ease-out; }
+        .kg-spinner { display: inline-block; width: 13px; height: 13px; margin-right: 7px; vertical-align: -2px; border: 2px solid rgba(255,255,255,.35); border-top-color: currentColor; border-radius: 50%; animation: kg-spin .7s linear infinite; }
+        @keyframes kg-spin { to { transform: rotate(360deg); } }
+        .kg-btn-loading, .kg-btn-disabled { opacity: .72; cursor: default; }
         body {
             font-family: 'Figtree', system-ui, -apple-system, sans-serif;
             background: #0a0c12;

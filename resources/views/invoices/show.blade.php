@@ -89,7 +89,7 @@
 <div class="card" style="margin-top:14px;">
     <div class="card-hd"><h3>Notes</h3></div>
     <div class="card-bd">
-        <p style="font-size:0.875rem;color:#c8cce0;line-height:1.6;white-space:pre-line;">{{ $invoice->notes }}</p>
+        <p class="desc-field">{!! format_description($invoice->notes) !!}</p>
     </div>
 </div>
 @endif
