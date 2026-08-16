@@ -16,7 +16,7 @@
         .sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid #252936; }
         .sidebar-logo h1 { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.25; }
         .sidebar-logo h1 span { color: #6c63ff; }
-        .sidebar-logo small { font-size: 0.68rem; color: #4a5068; letter-spacing: 0.04em; text-transform: uppercase; }
+        .sidebar-logo small { display: block; text-align: center; font-size: 0.85rem; font-weight: 800; color: #f2b705; letter-spacing: 0.04em; text-transform: uppercase; }
         .sidebar-logo img { max-width: 100%; object-fit: contain; }
         .nav-section { padding: 14px 10px 0; }
         .nav-label { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3a4060; padding: 0 8px 8px; }
@@ -158,10 +158,10 @@
             display: none;
             align-items: center;
             justify-content: center;
-            width: 36px; height: 36px;
+            width: 46px; height: 46px;
             background: transparent;
             border: 1px solid #252936;
-            border-radius: 7px;
+            border-radius: 10px;
             color: #c8cce0;
             cursor: pointer;
             flex-shrink: 0;
@@ -423,7 +423,7 @@
     <div class="topbar">
         <div class="row center" style="gap:10px;min-width:0;flex:1;">
             <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
                 </svg>
             </button>

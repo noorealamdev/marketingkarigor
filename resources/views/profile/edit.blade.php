@@ -115,7 +115,11 @@
                         <input type="password" name="password" id="newPassword" class="form-control"
                                autocomplete="new-password" oninput="updatePasswordStrength(this.value)">
                         <p style="font-size:0.7rem;color:#4a5068;margin-top:4px;">
-                            Min 8 characters, with uppercase, lowercase, a number, and a symbol.
+                            @if($user->hasRole('client'))
+                                Min 6 characters.
+                            @else
+                                Min 8 characters, with uppercase, lowercase, a number, and a symbol.
+                            @endif
                         </p>
                         <div style="display:flex;gap:4px;margin-top:6px;" id="strengthBars">
                             <div class="strength-bar" data-bar="1"></div>
@@ -210,15 +214,21 @@ function previewAndSubmitAvatar(input) {
     setTimeout(() => document.getElementById('avatarUploadForm').requestSubmit(), 150);
 }
 
+const CLIENT_MODE = @json($user->hasRole('client'));
+
 function updatePasswordStrength(value) {
     const bars = document.querySelectorAll('#strengthBars .strength-bar');
     const label = document.getElementById('strengthLabel');
 
     let score = 0;
-    if (value.length >= 8) score++;
-    if (/[a-z]/.test(value) && /[A-Z]/.test(value)) score++;
-    if (/[0-9]/.test(value)) score++;
-    if (/[^A-Za-z0-9]/.test(value)) score++;
+    if (CLIENT_MODE) {
+        score = value.length >= 6 ? 4 : (value.length ? 1 : 0);
+    } else {
+        if (value.length >= 8) score++;
+        if (/[a-z]/.test(value) && /[A-Z]/.test(value)) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+    }
 
     const colors = ['#f87171', '#f87171', '#facc15', '#4ade80'];
     const labels = ['Too weak', 'Weak', 'Fair', 'Strong'];

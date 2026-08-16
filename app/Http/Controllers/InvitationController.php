@@ -110,9 +110,15 @@ class InvitationController extends Controller
             return redirect()->route('login')->with('error', 'This invitation is no longer valid.');
         }
 
+        // Clients aren't tech staff — the full strong-password policy (mixed
+        // case + numbers + symbols) causes real signup friction for them, so
+        // they only need a reasonable minimum length. Staff/internal roles
+        // keep the full default policy.
+        $isClient = in_array('client', $invitation->role_ids ?? [], true);
+
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', $isClient ? Password::min(6) : Password::defaults()],
         ]);
 
         $user = User::create([

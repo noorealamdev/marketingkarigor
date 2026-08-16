@@ -15,9 +15,14 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        // Clients get the same relaxed policy here as at invitation signup
+        // (see InvitationController::register) — otherwise they'd be forced
+        // into the full strong policy the moment they try to change it.
+        $rule = $request->user()->hasRole('client') ? Password::min(6) : Password::defaults();
+
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => ['required', $rule, 'confirmed'],
         ]);
 
         $request->user()->update([

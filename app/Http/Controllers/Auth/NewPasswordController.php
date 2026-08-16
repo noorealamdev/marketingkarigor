@@ -21,7 +21,9 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): View
     {
-        return view('auth.reset-password', ['request' => $request]);
+        $isClient = User::where('email', $request->email)->first()?->hasRole('client') ?? false;
+
+        return view('auth.reset-password', ['request' => $request, 'isClient' => $isClient]);
     }
 
     /**
@@ -31,10 +33,15 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Clients get the same relaxed policy here as everywhere else they
+        // set a password (see InvitationController::register) — the token
+        // itself doesn't identify the user, so look them up by email first.
+        $isClient = User::where('email', $request->email)->first()?->hasRole('client') ?? false;
+
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', $isClient ? Rules\Password::min(6) : Rules\Password::defaults()],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
