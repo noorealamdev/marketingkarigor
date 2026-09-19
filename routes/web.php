@@ -8,6 +8,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\CommentReactionController;
 use App\Http\Controllers\TaskAttachmentController;
+use App\Http\Controllers\TaskPaymentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\InvitationController;
@@ -147,6 +148,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/salaries/{record}', [SalaryController::class, 'destroy'])->name('salaries.destroy');
         Route::post('/salaries/{user}/payments', [SalaryController::class, 'storePayment'])->name('salaries.payments.store');
         Route::delete('/salaries/payments/{payment}', [SalaryController::class, 'destroyPayment'])->name('salaries.payments.destroy');
+
+        // Task-based payments (pay assignees/freelancers for completed tasks)
+        Route::post('/tasks/{task}/payments', [TaskPaymentController::class, 'store'])->name('tasks.payments.store');
+        Route::delete('/task-payments/{payment}', [TaskPaymentController::class, 'destroy'])->name('tasks.payments.destroy');
 
         // Finance (investor payments + expenses)
         Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');

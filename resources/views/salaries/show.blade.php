@@ -175,6 +175,31 @@
     </table>
 </div>
 
+{{-- Task Payments (freelance / per-task work) --}}
+<div class="card mb6">
+    <div class="card-hd"><h3>Task Payments ({{ $taskPayments->count() }}) &middot; Total {!! format_currency($taskPayments->sum('amount')) !!}</h3></div>
+    <table class="table">
+        <thead>
+            <tr><th>Task</th><th>Amount</th><th>Date Paid</th><th>Paid By</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+            @forelse($taskPayments as $tp)
+            <tr>
+                <td class="td-header">
+                    @if($tp->task)<a href="{{ route('tasks.show', $tp->task) }}" class="link fw600">{{ $tp->task->name }}</a>@else<span class="text-muted">Deleted task</span>@endif
+                </td>
+                <td class="fw700" data-label="Amount" style="color:#4ade80;">{!! $tp->formatted_amount !!}</td>
+                <td class="text-muted" data-label="Date Paid">{{ $tp->paid_at->format('M d, Y') }}</td>
+                <td class="text-muted" data-label="Paid By">{{ $tp->paidBy?->name ?? '—' }}</td>
+                <td class="text-muted" data-label="Notes" style="font-size:0.8rem;white-space:normal;">{{ $tp->notes ?: '—' }}</td>
+            </tr>
+            @empty
+            <tr><td colspan="5" class="td-empty"><div class="empty-state"><p>No task payments yet. Pay from a completed task's page.</p></div></td></tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
 {{-- Salary History Table --}}
 <div class="card">
     <div class="card-hd"><h3>Salary Rate History</h3></div>

@@ -18,13 +18,14 @@ class Task extends Model implements HasMedia
 
     protected $fillable = [
         'name', 'slug', 'description', 'status', 'priority', 'due_date', 'project_id',
-        'shared_with_client_at', 'client_approved_at',
+        'shared_with_client_at', 'client_approved_at', 'payment_amount',
     ];
 
     protected $casts = [
         'due_date'               => 'date',
         'shared_with_client_at'  => 'datetime',
         'client_approved_at'     => 'datetime',
+        'payment_amount'         => 'decimal:2',
     ];
 
     public function getRouteKeyName(): string
@@ -89,6 +90,11 @@ class Task extends Model implements HasMedia
     public function assignees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_assignees')->withTimestamps();
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(TaskPayment::class)->latest('paid_at');
     }
 
     public function isAssignedTo(?User $user): bool

@@ -98,7 +98,15 @@
                         <span class="text-muted">—</span>
                     @endif
                 </td>
-                <td data-label="Status"><span class="badge badge-{{ $task->status }}">{{ str_replace('_',' ',$task->status) }}</span></td>
+                <td data-label="Status"><span class="badge badge-{{ $task->status }}">{{ str_replace('_',' ',$task->status) }}</span>
+                    @if(auth()->user()->isAdmin() && ($task->payment_amount > 0 || $task->payments->isNotEmpty()))
+                        @php $paid = $task->payments->sum('amount'); $fee = (float) $task->payment_amount; @endphp
+                        <div class="text-xs" style="margin-top:4px;color:{{ $paid > 0 && ($fee <= 0 || $paid >= $fee) ? '#4ade80' : ($task->status === 'done' ? '#fbbf24' : '#6b7590') }};">
+                            {{ $paid > 0 && ($fee <= 0 || $paid >= $fee) ? 'Paid' : ($paid > 0 ? 'Part-paid' : ($task->status === 'done' ? 'Payment due' : 'Fee')) }}
+                            @if($fee > 0) &middot; {!! format_currency($fee) !!} @endif
+                        </div>
+                    @endif
+                </td>
                 <td data-label="Priority"><span class="badge badge-{{ $task->priority }}">{{ $task->priority }}</span></td>
                 <td data-label="Due Date" style="{{ $task->due_date?->isPast() && $task->status!=\App\Enums\TaskStatus::Done->value ? 'color:#f87171' : 'color:#6b7590' }}">
                     {{ $task->due_date ? $task->due_date->format('M d, Y') : '—' }}

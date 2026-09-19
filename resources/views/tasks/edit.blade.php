@@ -58,6 +58,13 @@
                     <input type="date" name="due_date" class="form-control" value="{{ old('due_date', $task->due_date?->format('Y-m-d')) }}">
                 </div>
             </div>
+            @if(auth()->user()->isAdmin())
+            <div class="form-group">
+                <label class="form-label">Task Fee (৳) <span class="text-faint text-xs">(optional — what you pay the assignee once it is done; only you can see this)</span></label>
+                <input type="number" name="payment_amount" class="form-control" step="0.01" min="0" placeholder="0.00" value="{{ old('payment_amount', $task->payment_amount) }}">
+                @error('payment_amount')<div class="form-error">{{ $message }}</div>@enderror
+            </div>
+            @endif
             @if(auth()->user()->hasAnyRole(['super-admin', 'project-manager']))
             <div class="form-group">
                 <label class="form-label">Assign To <span class="text-faint text-xs">(select any number of team members)</span></label>

@@ -444,6 +444,78 @@
             </div>
         </div>
 
+        @if(auth()->user()->isAdmin())
+        {{-- ── TASK PAYMENT (admin only) ── --}}
+        @php
+            $paidTotal = $task->payments->sum('amount');
+            $fee = (float) $task->payment_amount;
+            $remaining = max($fee - $paidTotal, 0);
+        @endphp
+        <div class="card">
+            <div class="card-hd"><h3>Task Payment</h3></div>
+            <div class="card-bd">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin-bottom:12px;">
+                    <div>
+                        <div class="fw700">{!! $fee > 0 ? format_currency($fee) : '—' !!}</div>
+                        <div class="text-xs text-muted">Agreed fee</div>
+                    </div>
+                    <div>
+                        <div class="fw700" style="color:#4ade80;">{!! format_currency($paidTotal) !!}</div>
+                        <div class="text-xs text-muted">Paid</div>
+                    </div>
+                </div>
+
+                @if($task->status !== \App\Enums\TaskStatus::Done->value)
+                    <p class="text-xs text-faint">Payment opens when this task is marked <strong>Done</strong>.</p>
+                @elseif($task->assignees->isEmpty())
+                    <p class="text-xs text-faint">Assign someone to this task to pay them.</p>
+                @else
+                    <form method="POST" action="{{ route('tasks.payments.store', $task) }}" style="display:grid;gap:10px;">
+                        @csrf
+                        <div>
+                            <label class="form-label">Pay to</label>
+                            <select name="user_id" class="form-control" required>
+                                @foreach($task->assignees as $assignee)
+                                <option value="{{ $assignee->id }}" {{ old('user_id') == $assignee->id ? 'selected' : '' }}>{{ $assignee->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div>
+                                <label class="form-label">Amount (৳)</label>
+                                <input type="number" name="amount" class="form-control" step="0.01" min="0.01" value="{{ old('amount', $remaining > 0 ? $remaining : '') }}" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Date paid</label>
+                                <input type="date" name="paid_at" class="form-control" value="{{ old('paid_at', now()->format('Y-m-d')) }}" required>
+                            </div>
+                        </div>
+                        <input type="text" name="notes" class="form-control" placeholder="Notes (optional) — e.g. bKash TrxID" value="{{ old('notes') }}">
+                        <button type="submit" class="btn btn-primary btn-sm" style="justify-content:center;">Record Payment</button>
+                        <p class="text-xs text-muted">Also logged as an expense in Finance.</p>
+                    </form>
+                @endif
+
+                @if($task->payments->isNotEmpty())
+                <div style="margin-top:14px;border-top:1px solid #252936;padding-top:10px;display:grid;gap:8px;">
+                    @foreach($task->payments as $pay)
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:0.8rem;">
+                        <div>
+                            <span class="fw600" style="color:#4ade80;">{!! $pay->formatted_amount !!}</span>
+                            <span class="text-muted"> to {{ $pay->user?->name ?? 'Removed user' }}</span>
+                            <div class="text-xs text-faint">{{ $pay->paid_at->format('M d, Y') }}@if($pay->notes) &middot; {{ $pay->notes }}@endif</div>
+                        </div>
+                        <form method="POST" action="{{ route('tasks.payments.destroy', $pay) }}" onsubmit="return confirm('Delete this payment? This also removes the matching Finance expense.')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-xs">Del</button>
+                        </form>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
         {{-- Status update --}}
         <div class="card">
             <div class="card-hd"><h3>Update Status</h3></div>

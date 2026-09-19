@@ -39,7 +39,9 @@ class SalaryController extends Controller
         $current = $records->first();
         $payments = $user->salaryPayments()->with(['paidBy', 'expense'])->get();
 
-        return view('salaries.show', compact('user', 'records', 'current', 'payments'));
+        $taskPayments = $user->taskPayments()->with(['task', 'paidBy'])->get();
+
+        return view('salaries.show', compact('user', 'records', 'current', 'payments', 'taskPayments'));
     }
 
     public function store(Request $request, User $user)

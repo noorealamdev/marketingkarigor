@@ -18,6 +18,9 @@ class TaskController extends Controller
     {
         $user  = auth()->user();
         $query = Task::with(['project', 'assignees']);
+        if ($user->isAdmin()) {
+            $query->with('payments');
+        }
 
         if (!$user->hasAnyRole(['super-admin', 'project-manager'])) {
             $query->whereHas('assignees', fn($q) => $q->whereKey($user->id));
@@ -64,10 +67,16 @@ class TaskController extends Controller
             'project_id'   => 'nullable|exists:projects,id',
             'assignees'    => 'nullable|array',
             'assignees.*'  => 'exists:users,id',
+            'payment_amount' => 'nullable|numeric|min:0',
         ]);
 
         $assigneeIds = $data['assignees'] ?? [];
         unset($data['assignees']);
+
+        // Task fee is finance data — only the super-admin may set it.
+        if (!auth()->user()->isAdmin()) {
+            unset($data['payment_amount']);
+        }
 
         // Only admins and project-managers may assign to someone else
         if (!auth()->user()->hasAnyRole(['super-admin', 'project-manager'])) {
@@ -98,6 +107,9 @@ class TaskController extends Controller
     {
         $this->authorizeTaskAccess($task);
         $task->load(['project.client', 'assignees.roles', 'comments.author.roles', 'comments.reactions', 'comments.media']);
+        if (auth()->user()->isAdmin()) {
+            $task->load('payments.user', 'payments.paidBy');
+        }
         return view('tasks.show', compact('task'));
     }
 
@@ -132,10 +144,17 @@ class TaskController extends Controller
             'project_id'  => 'nullable|exists:projects,id',
             'assignees'    => 'nullable|array',
             'assignees.*'  => 'exists:users,id',
+            'payment_amount' => 'nullable|numeric|min:0',
         ]);
 
         $newAssigneeIds = $data['assignees'] ?? [];
         unset($data['assignees']);
+
+        // Only the super-admin may change the fee, and only when the form sent it
+        // (the quick status buttons on the task page don't include this field).
+        if (!auth()->user()->isAdmin() || !$request->has('payment_amount')) {
+            unset($data['payment_amount']);
+        }
 
         $oldAssigneeIds = $task->assignees->pluck('id')->all();
         $oldStatus      = $task->status;

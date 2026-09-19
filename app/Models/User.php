@@ -73,6 +73,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(SalaryPayment::class)->orderByDesc('period_month');
     }
 
+    public function taskPayments(): HasMany
+    {
+        return $this->hasMany(TaskPayment::class)->latest('paid_at');
+    }
+
     public function profile(): HasOne
     {
         return $this->hasOne(MemberProfile::class);
